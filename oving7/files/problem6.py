@@ -251,3 +251,75 @@ def approximate_convergence_order(h_1=1e-2, h_2=1e-3, y_0=1.0):
     p for Heun's method: 2.0046147808408326
     p for Taylor's 2nd order method: 2.0014391055154577
     """
+
+
+h_1 = 1e-2
+h_2 = 1e-3
+h_3 = 1e-4
+y_0 = 1.0
+t_1 = np.arange(0, 2, h_1)
+t_2 = np.arange(0, 2, h_2)
+t_3 = np.arange(0, 2, h_3)
+
+euler_error_1 = np.max(np.abs(eulers_method_vectorized(t_1, y_0) - exact_solution(t_1)))
+euler_error_2 = np.max(np.abs(eulers_method_vectorized(t_2, y_0) - exact_solution(t_2)))
+euler_error_3 = np.max(np.abs(eulers_method_vectorized(t_3, y_0) - exact_solution(t_3)))
+
+heun_error_1 = np.max(np.abs(heuns_method_vectorized(t_1, y_0) - exact_solution(t_1)))
+heun_error_2 = np.max(np.abs(heuns_method_vectorized(t_2, y_0) - exact_solution(t_2)))
+heun_error_3 = np.max(np.abs(heuns_method_vectorized(t_3, y_0) - exact_solution(t_3)))
+
+taylor_error_1 = np.max(
+    np.abs(taylor_2_method_vectorized(t_1, y_0) - exact_solution(t_1))
+)
+taylor_error_2 = np.max(
+    np.abs(taylor_2_method_vectorized(t_2, y_0) - exact_solution(t_2))
+)
+taylor_error_3 = np.max(
+    np.abs(taylor_2_method_vectorized(t_3, y_0) - exact_solution(t_3))
+)
+
+h = np.log(np.array([h_1, h_2, h_3]))
+euler_error = np.log(np.array([euler_error_1, euler_error_2, euler_error_3]))
+heun_error = np.log(np.array([heun_error_1, heun_error_2, heun_error_3]))
+taylor_error = np.log(np.array([taylor_error_1, taylor_error_2, taylor_error_3]))
+
+plt.plot(h, euler_error, label="Euler's method")
+plt.plot(h, heun_error, label="Heun's method")
+plt.plot(h, taylor_error, label="Taylor's 2nd order method")
+
+# Theoretical values
+p_euler = 1
+p_heun = 2
+p_taylor = 2
+
+# Intercepts
+intercept_euler = euler_error[0]
+intercept_heun = heun_error[0]
+intercept_taylor = taylor_error[0]
+
+plt.plot(
+    h,
+    intercept_euler + (h - h[0]) * p_euler,
+    label="Theoretical Euler's method",
+    linestyle=":",
+)
+plt.plot(
+    h,
+    intercept_heun + (h - h[0]) * p_heun,
+    label="Theoretical Heun's method",
+    linestyle=":",
+)
+plt.plot(
+    h,
+    intercept_taylor + (h - h[0]) * p_taylor,
+    label="Theoretical Taylor's 2nd order method",
+    linestyle=":",
+)
+
+plt.xlabel("h")
+plt.ylabel("error")
+plt.title("Error vs h")
+plt.legend()
+plt.grid(True)
+plt.show()
