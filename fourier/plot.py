@@ -87,8 +87,7 @@ def plot_fourier_series(f, N, L, a0=0.0, an=lambda n: 0.0, bn=lambda n: 0.0):
     
     plt.show()
 
-
-if __name__ == "__main__":
+def plot_old_series():
     # plot_fourier_series(
     #     lambda x: (1 - x),
     #     N=50,
@@ -123,21 +122,25 @@ if __name__ == "__main__":
     #     bn=lambda n: 2 * (-1) ** n / (n * pi),
     # )
 
-    # This is the long series that needs the extra delta term
     # plot_fourier_series(
     #     lambda x: (np.sin(x) ** 2 + 3 * x ** 2 - 4 * x + 5),
     #     N=300,
     #     L=pi,
     #     a0=pi**2 + 11 / 2,
-    #     an=lambda n: 12 * (-1) ** n / n**2,
+    #     an=lambda n: 12 * (-1) ** n / n**2 + (-1/2 if n == 2 else 0), # needs a delta term for n = 2
     #     bn=lambda n: 8 * (-1) ** n / n,
     # )
+    return
 
+if __name__ == "__main__":
+    # Problem 4a)
     plot_fourier_series(
         lambda x: np.where((x >= 0) & (x <= pi/2), x, 0),
-        N=[10, 30],
+        N=[5, 20, 100],
         L=pi,
-        a0=0,
-        an=lambda n:0,
-        bn=lambda n: 0
+        a0=pi/16,
+        an=lambda n: (pi*n*np.sin(n*pi/2)/2 + np.cos(n*pi/2) - 1) / (pi*n**2),
+        bn=lambda n: -np.cos(n*pi/2)/(2*n) + np.sin(n*pi/2)/(pi*n**2),
     )
+    
+    # Problem 4b)
